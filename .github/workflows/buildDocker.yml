@@ -7,7 +7,7 @@ on:
       - 'v*'
 
 jobs:
-  test-and-build-and-push:
+  build-and-push:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -41,5 +41,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/6qhtsk/bestdori-proxy:latest
-            ghcr.io/6qhtsk/bestdori-proxy:${{ env.VERSION }}
+            ghcr.io/6qhtsk/sonolus-test-server:latest
+            ghcr.io/6qhtsk/sonolus-test-server:${{ env.VERSION }}
