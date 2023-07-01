@@ -1,4 +1,4 @@
-# Ayachan 测试服务器 - V0.7.0-rc.2
+# Ayachan 测试服务器 - V0.7.0-rc.3
 
 一个可以由玩家上传临时谱面用于测试的Sonolus服务器
 
@@ -24,9 +24,11 @@ docker run -p 8000:8000 -v /path/to/your/sonolus:/sonolus-test-server/sonolus \
 -v /path/to/your/config.ini:/sonolus-test-server/config.ini \
 ghcr.io/6qhtsk/sonolus-test-server:latest
 ```
-
+- 容器基于Ubuntu进行构建。
 - 在运行容器之前，请确保将宿主机器上的服务器资源文件夹挂载到 `/sonolus-test-server/sonolus` 文件夹下。
 - 注意，docker容器开放了8000端口用于访问服务。
+- Hint：可以使用nju的ghcr镜像加速部署
+- 如果要使用腾讯云COS来作为存储端，若使用腾讯云服务器，建议将COS桶和服务器设置在同一地域
 
 ## 配置文件
 
