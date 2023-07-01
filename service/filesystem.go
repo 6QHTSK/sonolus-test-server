@@ -1,10 +1,10 @@
 package service
 
 import (
-	"compress/gzip"
-	"encoding/json"
+	"bytes"
 	"fmt"
-	"github.com/6qhtsk/sonolus-test-server/model"
+	"github.com/h2non/filetype"
+	"io"
 	"log"
 	"os"
 )
@@ -19,42 +19,50 @@ func initLocalRepo() {
 }
 
 func getDataPath(uid int) string {
-	return fmt.Sprintf("%s/%d/data", localRepo, uid)
+	return fmt.Sprintf("%s/%d.json.gz", localRepo, uid)
 }
 
 func getBgmPath(uid int) string {
-	return fmt.Sprintf("%s/%d/bgm", localRepo, uid)
+	return fmt.Sprintf("%s/%d.mp3", localRepo, uid)
 }
 
-func createPostDir(uid int) error {
-	return os.MkdirAll(fmt.Sprintf("%s/%d", localRepo, uid), os.FileMode(0755))
-}
-
-func writeSonolusData(chart model.SonolusLevelData, dest string) error {
-	data, err := json.Marshal(chart)
-	if err != nil {
-		return err
-	}
-
-	dataFile, err := os.Create(dest)
-	if err != nil {
-		return err
-	}
-	gw := gzip.NewWriter(dataFile)
-	defer gw.Close()
-	_, err = gw.Write(data)
-	if err != nil {
-		return err
-	}
-	return err
-}
-
-func removeOutdatedPostDir(outdatedPostUid []int) error {
+func removeOutdatedPost(outdatedPostUid []int) error {
 	for _, uid := range outdatedPostUid {
-		err := os.RemoveAll(fmt.Sprintf("%s/%d", localRepo, uid))
+		err := os.Remove(getDataPath(uid))
+		if err != nil {
+			return err
+		}
+		err = os.Remove(getBgmPath(uid))
 		if err != nil {
 			return err
 		}
 	}
 	return nil
+}
+
+func checkIfAudio(bgmData []byte) error {
+	head := bgmData[0:261]
+	if !filetype.IsAudio(head) {
+		trueFileType, _ := filetype.Match(head)
+		return fmt.Errorf("the file you upload is %s (MIME %s), not audio",
+			trueFileType.Extension, trueFileType.MIME.Value)
+	}
+	return nil
+}
+
+func saveIOReaderToFile(file io.Reader, dest string) error {
+	// 创建文件
+	out, err := os.Create(dest)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+	// 保存文件
+	_, err = io.Copy(out, file)
+	return err
+}
+
+func saveBytesToFile(data []byte, dest string) (err error) {
+	reader := bytes.NewReader(data)
+	return saveIOReaderToFile(reader, dest)
 }

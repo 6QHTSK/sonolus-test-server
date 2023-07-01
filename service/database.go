@@ -21,7 +21,7 @@ func initializeDatabase(dbFile string) error {
 		defer db.Close()
 
 		sqlStmt := `
-        CREATE TABLE post (id INTEGER PRIMARY KEY, title TEXT, difficulty INTEGER, hidden INTEGER, expired TIMESTAMP);
+        CREATE TABLE post (id INTEGER PRIMARY KEY, title TEXT, difficulty INTEGER, hidden INTEGER, expired TIMESTAMP, bgmHash TEXT, dataHash TEXT);
         `
 		_, err = db.Exec(sqlStmt)
 		if err != nil {
@@ -32,7 +32,7 @@ func initializeDatabase(dbFile string) error {
 }
 
 func initDatabase() {
-	dbFile := "database.db"
+	dbFile := "./sonolus/database.db"
 	err := initializeDatabase(dbFile)
 	if err != nil {
 		panic(err)
@@ -65,10 +65,10 @@ func generatePostUid() int {
 	return id
 }
 
-func insertPost(uid int, post model.UploadPost) error {
+func insertPost(uid int, post model.UploadPost, bgmHash string, dataHash string) error {
 	current := time.Now().UTC().Unix()
 	expired := current + post.Lifetime
-	_, err := db.Exec(`INSERT INTO post VALUES (?,?,?,?,?)`, uid, post.Title, post.Difficulty, post.Hidden, expired)
+	_, err := db.Exec(`INSERT INTO post VALUES (?,?,?,?,?,?,?)`, uid, post.Title, post.Difficulty, post.Hidden, expired, bgmHash, dataHash)
 	if err != nil {
 		log.Fatal(err)
 	}

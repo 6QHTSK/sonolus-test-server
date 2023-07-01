@@ -31,8 +31,8 @@ func (bdNote *BestdoriNote) Convert(ctx context.Context) error {
 }
 
 func (bdNote *BestdoriDirectioalNote) Convert(ctx context.Context) error {
-	var direction int
-	if bdNote.Directional == "Left" {
+	var direction float64
+	if bdNote.Direction == "Left" {
 		direction = -1
 	} else {
 		direction = 1
@@ -41,7 +41,7 @@ func (bdNote *BestdoriDirectioalNote) Convert(ctx context.Context) error {
 		Archetype: "DirectionalFlickNote",
 		Data: map[string]interface{}{
 			ARCHETYPE_BEAT: bdNote.Beat,
-			"lane":         bdNote.Lane - 3,
+			"lane":         bdNote.Lane - 3.0,
 			"direction":    direction,
 			"size":         bdNote.Width,
 		},
@@ -65,7 +65,7 @@ func SlideLongConvertor(ctx context.Context, connections []BestdoriConnectionNot
 				Archetype: "SlideStartNote",
 				Data: map[string]interface{}{
 					ARCHETYPE_BEAT: connection.Beat,
-					"lane":         connection.Lane - 3,
+					"lane":         connection.Lane - 3.0,
 				},
 				Sim: true,
 			}
@@ -85,7 +85,7 @@ func SlideLongConvertor(ctx context.Context, connections []BestdoriConnectionNot
 				Archetype: archetype,
 				Data: map[string]interface{}{
 					ARCHETYPE_BEAT: connection.Beat,
-					"lane":         connection.Lane - 3,
+					"lane":         connection.Lane - 3.0,
 					"prev":         start,
 				},
 				Sim: true,
@@ -123,7 +123,7 @@ func SlideLongConvertor(ctx context.Context, connections []BestdoriConnectionNot
 				Archetype: "IgnoredNote",
 				Data: map[string]interface{}{
 					ARCHETYPE_BEAT: connection.Beat,
-					"lane":         connection.Lane - 3,
+					"lane":         connection.Lane - 3.0,
 				},
 				Sim: false,
 			}
@@ -146,7 +146,7 @@ func SlideLongConvertor(ctx context.Context, connections []BestdoriConnectionNot
 				Archetype: "SlideTickNote",
 				Data: map[string]interface{}{
 					ARCHETYPE_BEAT: connection.Beat,
-					"lane":         connection.Lane - 3,
+					"lane":         connection.Lane - 3.0,
 					"prev":         start,
 				},
 				Sim: false,

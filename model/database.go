@@ -8,4 +8,6 @@ type DatabasePost struct {
 	Difficulty int       `db:"difficulty"`
 	Expired    time.Time `db:"expired"`
 	Hidden     bool      `db:"hidden"`
+	BgmHash    string    `db:"bgmHash"`
+	DataHash   string    `db:"dataHash"`
 }

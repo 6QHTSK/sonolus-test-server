@@ -1,14 +1,12 @@
 package service
 
 import (
-	"crypto/sha1"
 	"fmt"
+	"github.com/6qhtsk/sonolus-test-server/config"
 	"github.com/6qhtsk/sonolus-test-server/errors"
 	"github.com/6qhtsk/sonolus-test-server/model"
 	"github.com/6qhtsk/sonolusgo"
-	"io"
 	"math/rand"
-	"os"
 	"strconv"
 	"time"
 )
@@ -46,21 +44,6 @@ var LevelHandlers = sonolusgo.SonolusHandlers[sonolusgo.Level]{
 	Search:    LevelSearchHandler,
 	Item:      LevelItemHandler,
 	Recommend: sonolusgo.GetEmptyRecommend[sonolusgo.Level],
-}
-
-func fileSha1(filePath string) string {
-	file, err := os.Open(filePath)
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-
-	hash := sha1.New()
-	if _, err := io.Copy(hash, file); err != nil {
-		panic(err)
-	}
-
-	return fmt.Sprintf("%x", hash.Sum(nil))
 }
 
 func LevelListHandler(page int, queryMap map[string]string) (pageCount int, items []sonolusgo.Level) {
@@ -124,6 +107,15 @@ func convertDatabaseToSonolus(dbItem model.DatabasePost) sonolusgo.Level {
 	}
 	r := rand.New(rand.NewSource(int64(dbItem.Id)))
 	randCoverID := r.Intn(35) + 1
+	var BGMItem sonolusgo.SRLLevelBgm
+	var DataItem sonolusgo.SRLLevelData
+	if config.ServerCfg.UseTencentCos {
+		BGMItem = sonolusgo.NewSRLLevelBgm(dbItem.BgmHash, fmt.Sprintf("https://upload.ayachan.fun/%s", getCosBgmPath(dbItem.Id)))
+		DataItem = sonolusgo.NewSRLLevelData(dbItem.DataHash, fmt.Sprintf("https://upload.ayachan.fun/%s", getCosDataPath(dbItem.Id)))
+	} else {
+		BGMItem = sonolusgo.NewSRLLevelBgm(dbItem.BgmHash, fmt.Sprintf("/sonolus/levels/%d/bgm", dbItem.Id))
+		DataItem = sonolusgo.NewSRLLevelData(dbItem.DataHash, fmt.Sprintf("/sonolus/levels/%d/data", dbItem.Id))
+	}
 	return sonolusgo.Level{
 		Name:          strconv.Itoa(dbItem.Id),
 		Version:       1,
@@ -136,21 +128,9 @@ func convertDatabaseToSonolus(dbItem model.DatabasePost) sonolusgo.Level {
 		UseBackground: sonolusgo.UseItem[sonolusgo.Background]{UseDefault: true},
 		UseEffect:     sonolusgo.UseItem[sonolusgo.Effect]{UseDefault: true},
 		UseParticle:   sonolusgo.UseItem[sonolusgo.Particle]{UseDefault: true},
-		Cover: sonolusgo.SRLLevelCover{
-			Type: "LevelCover",
-			Hash: fileSha1(fmt.Sprintf("./sonolus/repository/LevelThumbnail/%d", randCoverID)),
-			Url:  fmt.Sprintf("/sonolus/repository/LevelThumbnail/%d", randCoverID),
-		},
-		Bgm: sonolusgo.SRLLevelBgm{
-			Type: "LevelBgm",
-			Hash: fileSha1(fmt.Sprintf("./sonolus/levels/%d/bgm", dbItem.Id)),
-			Url:  fmt.Sprintf("/sonolus/levels/%d/bgm", dbItem.Id),
-		},
-		Preview: nil,
-		Data: sonolusgo.SRLLevelData{
-			Type: "LevelData",
-			Hash: fileSha1(fmt.Sprintf("./sonolus/levels/%d/data", dbItem.Id)),
-			Url:  fmt.Sprintf("/sonolus/levels/%d/data", dbItem.Id),
-		},
+		Cover:         sonolusgo.NewSRLLevelCover(fileSha1(fmt.Sprintf("./sonolus/repository/LevelThumbnail/%d", randCoverID)), fmt.Sprintf("/sonolus/repository/LevelThumbnail/%d", randCoverID)),
+		Bgm:           BGMItem,
+		Preview:       nil,
+		Data:          DataItem,
 	}
 }

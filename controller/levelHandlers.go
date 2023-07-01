@@ -14,6 +14,6 @@ func GetLevelItems(itemName string) gin.HandlerFunc {
 		if abortWhenErr(ctx, err, errors.BadUidErr) {
 			return
 		}
-		ctx.File(fmt.Sprintf("./sonolus/levels/%d/%s", id, itemName))
+		ctx.File(fmt.Sprintf("./sonolus/levels/%d.%s", id, map[string]string{"bgm": "mp3", "data": "json.gz"}[itemName]))
 	}
 }

@@ -93,12 +93,12 @@ func (note *BestdoriNote) getType() string {
 
 type BestdoriDirectioalNote struct {
 	BaseBestdoriNote
-	Directional string `json:"directional"`
-	Width       int    `json:"width"`
+	Direction string  `json:"direction"`
+	Width     float64 `json:"width"`
 }
 
 func (note *BestdoriDirectioalNote) getType() string {
-	return "Directional"
+	return "Direction"
 }
 
 type BestdoriSlideNote struct {
