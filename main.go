@@ -6,6 +6,7 @@ import (
 	"github.com/6qhtsk/sonolus-test-server/controller"
 	"github.com/6qhtsk/sonolus-test-server/service"
 	"github.com/6qhtsk/sonolusgo"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"log"
 )
@@ -17,6 +18,7 @@ func main() {
 	sonolusConfig.Handlers.Levels = service.LevelHandlers
 	sonolusConfig.ServerBanner = sonolusgo.NewSRLServerBanner("daae4b4a3d9fe51bd76ab68457ce1e3c0443f39a", "https://repository.ayachan.fun/sonolus/BackgroundImage/daae4b4a3d9fe51bd76ab68457ce1e3c0443f39a")
 	router := gin.Default()
+	router.Use(cors.Default())
 	sonolusConfig.LoadHandlers(router)
 	if !config.ServerCfg.UseTencentCos {
 		sonolusConfig.RouterGroups.Levels.GET("/:name/bgm", controller.GetLevelItems("bgm"))
