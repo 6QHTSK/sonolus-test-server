@@ -87,7 +87,7 @@ secret-key =
 
 ```json
 {
-	"uid": 123456
+	"uid": 123
 }
 ```
 

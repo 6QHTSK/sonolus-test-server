@@ -67,10 +67,10 @@ func generatePostUid() int {
 	var id int
 	query := `
         WITH RECURSIVE cnt(x) AS (
-            SELECT 100000
+            SELECT 100
             UNION ALL
             SELECT x+1 FROM cnt
-            LIMIT 900000
+            LIMIT 900
         )
         SELECT x FROM cnt
         WHERE x NOT IN (SELECT id FROM post)
