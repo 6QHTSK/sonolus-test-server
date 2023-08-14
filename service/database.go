@@ -21,7 +21,7 @@ func initializeDatabase(dbFile string) error {
 		defer db.Close()
 
 		sqlStmt := `
-        CREATE TABLE post (id INTEGER PRIMARY KEY, title TEXT, difficulty INTEGER, hidden INTEGER, expired TIMESTAMP, bgmHash TEXT, dataHash TEXT);
+        CREATE TABLE post (id INTEGER PRIMARY KEY, title TEXT, difficulty INTEGER, hidden INTEGER, expired TIMESTAMP, bgmHash TEXT, dataHash TEXT, upload TIMESTAMP);
         `
 		_, err = db.Exec(sqlStmt)
 		if err != nil {
@@ -29,6 +29,23 @@ func initializeDatabase(dbFile string) error {
 		}
 	}
 	return nil
+}
+
+// 临时，用于增加一列，用于记录上传时间
+func addUploadTimeColumn() {
+	sqlStmtAddUploadColumn := "ALTER TABLE post ADD COLUMN upload TIMESTAMP DEFAULT 0"
+	sqlStmtChkUploadColumn := "SELECT count(*) from sqlite_master where name='post' and sql like '%upload%'"
+	var result int
+	err := db.Get(&result, sqlStmtChkUploadColumn)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if result == 0 {
+		_, err := db.Exec(sqlStmtAddUploadColumn)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 }
 
 func initDatabase() {
@@ -42,6 +59,8 @@ func initDatabase() {
 	if err != nil {
 		panic(err)
 	}
+
+	addUploadTimeColumn()
 }
 
 func generatePostUid() int {
@@ -68,7 +87,7 @@ func generatePostUid() int {
 func insertPost(uid int, post model.UploadPost, bgmHash string, dataHash string) error {
 	current := time.Now().UTC().Unix()
 	expired := current + post.Lifetime
-	_, err := db.Exec(`INSERT INTO post VALUES (?,?,?,?,?,?,?)`, uid, post.Title, post.Difficulty, post.Hidden, expired, bgmHash, dataHash)
+	_, err := db.Exec(`INSERT INTO post(id,title,difficulty,hidden,expired,bgmHash,dataHash,upload) VALUES (?,?,?,?,?,?,?,?)`, uid, post.Title, post.Difficulty, post.Hidden, expired, bgmHash, dataHash, current)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -90,7 +109,7 @@ func deleteDBOutdatedPost() (deleteUidList []int, err error) {
 
 func GetPost(uid int, offset int) (postList []model.DatabasePost, err error) {
 	if uid == -1 {
-		err = db.Select(&postList, `SELECT * from post where hidden=FALSE LIMIT 20 OFFSET ?`, offset)
+		err = db.Select(&postList, `SELECT * from post where hidden=FALSE ORDER BY upload DESC LIMIT 20 OFFSET ?`, offset)
 	} else {
 		err = db.Select(&postList, `SELECT * from post where id=? LIMIT 20 OFFSET ?`, uid, offset)
 	}
