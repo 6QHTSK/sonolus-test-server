@@ -110,8 +110,8 @@ func convertDatabaseToSonolus(dbItem model.DatabasePost) sonolusgo.Level {
 	var BGMItem sonolusgo.SRLLevelBgm
 	var DataItem sonolusgo.SRLLevelData
 	if config.ServerCfg.UseTencentCos {
-		BGMItem = sonolusgo.NewSRLLevelBgm(dbItem.BgmHash, fmt.Sprintf("https://upload.ayachan.fun/%s", getCosBgmPath(dbItem.Id)))
-		DataItem = sonolusgo.NewSRLLevelData(dbItem.DataHash, fmt.Sprintf("https://upload.ayachan.fun/%s", getCosDataPath(dbItem.Id)))
+		BGMItem = sonolusgo.NewSRLLevelBgm(dbItem.BgmHash, fmt.Sprintf("%s/%s", config.ServerCfg.Cos.AccessUrl, getCosBgmPath(dbItem.Id)))
+		DataItem = sonolusgo.NewSRLLevelData(dbItem.DataHash, fmt.Sprintf("%s/%s", config.ServerCfg.Cos.AccessUrl, getCosDataPath(dbItem.Id)))
 	} else {
 		BGMItem = sonolusgo.NewSRLLevelBgm(dbItem.BgmHash, fmt.Sprintf("/sonolus/levels/%d/bgm", dbItem.Id))
 		DataItem = sonolusgo.NewSRLLevelData(dbItem.DataHash, fmt.Sprintf("/sonolus/levels/%d/data", dbItem.Id))

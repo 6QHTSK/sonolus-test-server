@@ -22,6 +22,7 @@ func newServerConfig() ServerConfig {
 
 type TencentCosConfig struct {
 	CosUrl    string `ini:"cos-url"`
+	AccessUrl string `ini:"access-url"`
 	SecretID  string `ini:"secret-id"`
 	SecretKey string `ini:"secret-key"`
 }

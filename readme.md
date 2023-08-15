@@ -40,6 +40,7 @@ use-tencent-cos = false
 
 [tencent-cos]
 cos-url    = 
+access-url =
 secret-id  = 
 secret-key =
 ```
