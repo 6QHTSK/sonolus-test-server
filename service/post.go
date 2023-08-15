@@ -44,6 +44,11 @@ func SavePost(post model.UploadPost) (uid int, err error, myError *errors.TestSe
 		return 0, err, errors.BadBGMType
 	}
 	bgmHash := bytesSha1(bgmBuffer.Bytes())
+	// 获得原始谱面
+	bestdoriV2ChartData, err := json.Marshal(post.Chart)
+	if err != nil {
+		return 0, err, errors.UploadChartErr
+	}
 	// 转码Sonolus谱面
 	sonolusChart, err := post.Chart.ConvertToSonnolus()
 	if err != nil {
@@ -68,6 +73,7 @@ func SavePost(post model.UploadPost) (uid int, err error, myError *errors.TestSe
 		if err != nil {
 			return 0, err, errors.FailUploadToTencentCos
 		}
+		err = uploadBytesToTencentCos(bestdoriV2ChartData, GetCosBDV2DataPath(uid))
 	} else { // 保存到本地系统
 		err = saveBytesToFile(bgmBuffer.Bytes(), getBgmPath(uid))
 		if err != nil {
@@ -76,6 +82,10 @@ func SavePost(post model.UploadPost) (uid int, err error, myError *errors.TestSe
 		err = saveBytesToFile(sonolusChartData, getDataPath(uid))
 		if err != nil {
 			return uid, err, errors.FailCreateFile
+		}
+		err = saveBytesToFile(bestdoriV2ChartData, getBDV2DataPath(uid))
+		if err != nil {
+			return 0, err, errors.FailCreateFile
 		}
 	}
 	// 插入到数据库

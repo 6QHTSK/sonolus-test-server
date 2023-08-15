@@ -23,6 +23,9 @@ func main() {
 	if !config.ServerCfg.UseTencentCos {
 		sonolusConfig.RouterGroups.Levels.GET("/:name/bgm", controller.GetLevelItems("bgm"))
 		sonolusConfig.RouterGroups.Levels.GET("/:name/data", controller.GetLevelItems("data"))
+		sonolusConfig.RouterGroups.Levels.GET("/:name/bdv2.json", controller.GetLevelItems("bdv2"))
+	} else {
+		sonolusConfig.RouterGroups.Levels.GET("/:name/bdv2.json", controller.RedirectBDV2Chart())
 	}
 	sonolusConfig.RouterGroups.Levels.POST("", controller.ChartUploadHandler())
 	err := router.Run(":" + config.ServerCfg.Port)

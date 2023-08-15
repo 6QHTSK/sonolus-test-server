@@ -37,6 +37,10 @@ func getCosDataPath(uid int) string {
 	return fmt.Sprintf("%s/%d.json.gz", cosPathPrefix, uid)
 }
 
+func GetCosBDV2DataPath(uid int) string {
+	return fmt.Sprintf("%s/%d.bdv2.json", cosPathPrefix, uid)
+}
+
 func uploadBytesToTencentCos(data []byte, filepath string) (err error) {
 	reader := bytes.NewReader(data)
 	return uploadToTencentCos(reader, filepath)

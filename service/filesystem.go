@@ -26,6 +26,10 @@ func getBgmPath(uid int) string {
 	return fmt.Sprintf("%s/%d.mp3", localRepo, uid)
 }
 
+func getBDV2DataPath(uid int) string {
+	return fmt.Sprintf("%s/%d.bdv2.json", localRepo, uid)
+}
+
 func removeOutdatedPost(outdatedPostUid []int) error {
 	for _, uid := range outdatedPostUid {
 		err := os.Remove(getDataPath(uid))

@@ -95,3 +95,13 @@ secret-key =
 其中：
 
 - `uid` (int): 上传成功后的谱面ID。
+
+### GET /sonolus/levels/:uid/bdv2.json
+
+#### 请求参数
+
+- `uid` (int): 测试服谱面ID
+
+#### 响应
+
+上传谱面的json代码
