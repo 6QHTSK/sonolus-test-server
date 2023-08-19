@@ -1,5 +1,5 @@
-github.com/6qhtsk/sonolusgo v0.7.1-rc.1 h1:E3x0V5P/LjZWGEzwKbmvg8K6zew/QM+0abV61GdEcEM=
-github.com/6qhtsk/sonolusgo v0.7.1-rc.1/go.mod h1:Zo+hF0jOiEGf2d69LhlJFdTYGSrdHMxWRJK7JNERNFg=
+github.com/6qhtsk/sonolusgo v0.7.2-rc.1 h1:Onl+eh+UxWsHg2Dvcg8Lwq2JEbSwE11qzaGbqqsWOjA=
+github.com/6qhtsk/sonolusgo v0.7.2-rc.1/go.mod h1:Zo+hF0jOiEGf2d69LhlJFdTYGSrdHMxWRJK7JNERNFg=
 github.com/QcloudApi/qcloud_sign_golang v0.0.0-20141224014652-e4130a326409/go.mod h1:1pk82RBxDY/JZnPQrtqHlUFfCctgdorsd9M06fMynOM=
 github.com/bytedance/sonic v1.5.0/go.mod h1:ED5hyg4y6t3/9Ku1R6dU/4KyJ48DZ4jPhfY1O2AihPM=
 github.com/bytedance/sonic v1.9.2 h1:GDaNjuWSGu09guE9Oql0MSTNhNCLlWwO8y/xM5BzcbM=

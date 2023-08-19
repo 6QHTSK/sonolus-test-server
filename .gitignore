@@ -311,3 +311,4 @@ cython_debug/
 .idea/
 sonolus/
 config.ini
+/scripts/*.json
