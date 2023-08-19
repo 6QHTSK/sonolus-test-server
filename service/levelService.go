@@ -84,7 +84,7 @@ func LevelSearchHandler() (search sonolusgo.Search) {
 
 func LevelItemHandler(name string) (item sonolusgo.Level, description string, err error) {
 	if name == "置顶公告#" {
-		return getNoticeLevel(), "公告不可游玩(´・ω・`)\n可在Sonolus1群、BanGDream谱师群或SonolusQQ频道找到我\nGithub项目：还没上传，记得上传后在这里改\nB站：@彩绫与6QHTSK 关私信提醒了你的消息可能很久才会被我看到", nil
+		return getNoticeLevel(), "公告不可游玩(´・ω・`)\n可在Sonolus CN QQ频道找到我\nGithub项目：https://github.com/6QHTSK/sonolus-test-server\nB站：@彩绫与6QHTSK 关私信提醒了你的消息可能很久才会被我看到", nil
 	}
 	uid, err := strconv.Atoi(name)
 	if err != nil {
