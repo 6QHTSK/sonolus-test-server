@@ -1,4 +1,6 @@
 import json
+import sys
+
 from deepdiff import DeepDiff
 
 
@@ -11,6 +13,10 @@ def compare_json_files(file1, file2):
     return diff.to_json()
 
 
-# 示例
-diff = compare_json_files('42620.json', 'gen.json')
-print(diff)
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print("Compare script need 2 args")
+    file1_path = sys.argv[1]
+    file2_path = sys.argv[2]
+    diff = compare_json_files(file1_path, file2_path)
+    print(diff)
