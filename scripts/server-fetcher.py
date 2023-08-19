@@ -3,7 +3,6 @@ import os.path
 import platform
 import queue
 import random
-import ssl
 import threading
 import time
 import requests
@@ -111,7 +110,7 @@ traverse_section("skins", ["data", "texture", "thumbnail"])
 traverse_section("backgrounds", ["configuration", "data", "image", "thumbnail"])
 traverse_section("effects", ["audio", "data", "thumbnail"])
 traverse_section("particles", ["data", "texture", "thumbnail"])
-traverse_section("engines", ["data", "thumbnail", "configuration"])
+traverse_section("engines", ["playData", "tutorialData", "thumbnail", "configuration"])
 
 exit_flag = True
 
