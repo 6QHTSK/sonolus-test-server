@@ -3,14 +3,14 @@ module github.com/6qhtsk/sonolus-test-server
 go 1.20
 
 require (
-	github.com/6qhtsk/sonolusgo v0.7.2-rc.1
+	github.com/6qhtsk/sonolusgo v0.7.2-rc.2
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-ini/ini v1.67.0
 	github.com/h2non/filetype v1.1.3
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/mattn/go-sqlite3 v1.14.17
-	github.com/tencentyun/cos-go-sdk-v5 v0.7.41
+	github.com/tencentyun/cos-go-sdk-v5 v0.7.42
 )
 
 require (
