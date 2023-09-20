@@ -17,6 +17,16 @@ func main() {
 	sonolusConfig.ServerName = fmt.Sprintf("Ayachan测试服务器 - %s", config.Version)
 	sonolusConfig.Handlers.Levels = service.LevelHandlers
 	sonolusConfig.ServerBanner = sonolusgo.NewSRLServerBanner("daae4b4a3d9fe51bd76ab68457ce1e3c0443f39a", "https://repository.ayachan.fun/sonolus/BackgroundImage/daae4b4a3d9fe51bd76ab68457ce1e3c0443f39a")
+	if !config.ServerCfg.UseTencentCos {
+		sonolusConfig.ServerInfo = sonolusgo.ServerInfoFilePath{
+			Levels:      "",
+			Skins:       "./sonolus/skins.local.json",
+			Backgrounds: "./sonolus/backgrounds.local.json",
+			Effects:     "./sonolus/effects.local.json",
+			Particles:   "./sonolus/particles.local.json",
+			Engines:     "./sonolus/engines.local.json",
+		}
+	}
 	router := gin.Default()
 	router.Use(cors.Default())
 	sonolusConfig.LoadHandlers(router)

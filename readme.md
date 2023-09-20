@@ -1,7 +1,7 @@
 # Ayachan 测试服务器
 
 ![GitHub tag (with filter)](https://img.shields.io/github/v/tag/6QHTSK/sonolus-test-server)
-![Static Badge](https://img.shields.io/badge/data-v1.1.0-green)
+![Static Badge](https://img.shields.io/badge/levelData-v1.1.0-green)
 
 一个可以由玩家上传临时谱面用于测试的Sonolus服务器
 
