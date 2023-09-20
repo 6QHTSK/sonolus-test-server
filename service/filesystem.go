@@ -32,13 +32,11 @@ func getBDV2DataPath(uid int) string {
 
 func removeOutdatedPost(outdatedPostUid []int) error {
 	for _, uid := range outdatedPostUid {
-		err := os.Remove(getDataPath(uid))
-		if err != nil {
-			return err
-		}
-		err = os.Remove(getBgmPath(uid))
-		if err != nil {
-			return err
+		for _, item := range []string{getDataPath(uid), getBgmPath(uid), getBDV2DataPath(uid)} {
+			err := os.Remove(item)
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return nil

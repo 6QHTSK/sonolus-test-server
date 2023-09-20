@@ -103,7 +103,7 @@ func deleteOutdatedPost() {
 	}
 	if config.ServerCfg.UseTencentCos {
 		for _, uid := range outdatedPost {
-			err = deleteInTencentCos([]string{getCosDataPath(uid), getCosBgmPath(uid)})
+			err = deleteInTencentCos([]string{getCosDataPath(uid), getCosBgmPath(uid), GetCosBDV2DataPath(uid)})
 			if err != nil {
 				log.Printf("删除谱面字段时发生错误：%s", err)
 				return
