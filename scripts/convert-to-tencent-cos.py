@@ -1,7 +1,9 @@
 import json
 
-files = ["skins.json", "backgrounds.json", "effects.json", "particles.json",
-         "engines.json"]
+files = ["skins.local.json", "backgrounds.local.json", "effects.local.json", "particles.local.json",
+         "engines.local.json"]
+cos_files = ["skins.json", "backgrounds.json", "effects.json", "particles.json",
+             "engines.json"]
 subKeys = [["data", "texture", "thumbnail"],
            ["configuration", "data", "image", "thumbnail"],
            ["audio", "data", "thumbnail"],
@@ -16,5 +18,5 @@ for index in range(len(files)):
         for subkey in subKeys[index]:
             if obj[subkey]["url"].startswith("/sonolus/repository/"):
                 obj[subkey]["url"] = "https://repository.ayachan.fun/sonolus/" + obj[subkey]["url"][20:]
-    with open(pwd + "tencentCos-" + files[index], "w", encoding="utf-8") as target:
+    with open(pwd + cos_files[index], "w", encoding="utf-8") as target:
         json.dump(data, target, ensure_ascii=False)

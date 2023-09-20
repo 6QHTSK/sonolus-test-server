@@ -97,7 +97,7 @@ def traverse_section(section_name, download_srl_list):
                     queueLock.release()
         i += 1
         time.sleep(random.random())
-    with open(os.path.join(os.getcwd(), "../sonolus/%s.json" % section_name), "w", encoding="utf8") as list_json_file:
+    with open(os.path.join(os.getcwd(), "../sonolus/%s.local.json" % section_name), "w", encoding="utf8") as list_json_file:
         json.dump(items, list_json_file, ensure_ascii=False)
 
 
@@ -110,7 +110,7 @@ traverse_section("skins", ["data", "texture", "thumbnail"])
 traverse_section("backgrounds", ["configuration", "data", "image", "thumbnail"])
 traverse_section("effects", ["audio", "data", "thumbnail"])
 traverse_section("particles", ["data", "texture", "thumbnail"])
-traverse_section("engines", ["playData", "tutorialData", "thumbnail", "configuration"])
+traverse_section("engines", ["playData", "tutorialData", "previewData", "thumbnail", "configuration"])
 
 exit_flag = True
 
