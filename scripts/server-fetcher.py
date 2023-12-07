@@ -46,7 +46,7 @@ class DownloadThread(threading.Thread):
                 queueLock.release()
 
 
-# only start with / should be downloaded, others will be view as remote repos
+# only start with / should be downloaded, others will be viewed as remote repos
 def download_file(remote_path):
     assets_path = os.path.join(os.getcwd(), "../sonolus")
     if remote_path.startswith("/sonolus/"):
@@ -110,7 +110,7 @@ traverse_section("skins", ["data", "texture", "thumbnail"])
 traverse_section("backgrounds", ["configuration", "data", "image", "thumbnail"])
 traverse_section("effects", ["audio", "data", "thumbnail"])
 traverse_section("particles", ["data", "texture", "thumbnail"])
-traverse_section("engines", ["playData", "tutorialData", "previewData", "thumbnail", "configuration"])
+traverse_section("engines", ["playData", "watchData", "tutorialData", "previewData", "thumbnail", "configuration"])
 
 exit_flag = True
 
