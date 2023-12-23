@@ -2,6 +2,7 @@ github.com/6qhtsk/sonolusgo v0.7.3-rc.1 h1:cwn1HYqRP+qJjWluOcDQ93QeAJuSVRbHroyYj
 github.com/6qhtsk/sonolusgo v0.7.3-rc.1/go.mod h1:Zo+hF0jOiEGf2d69LhlJFdTYGSrdHMxWRJK7JNERNFg=
 github.com/6qhtsk/sonolusgo v0.7.4-rc.1 h1:CIlPhbceKJHG1T5KYCPVUA2/7Zf1pL/9n8aPF5tYQTE=
 github.com/6qhtsk/sonolusgo v0.7.4-rc.1/go.mod h1:Zo+hF0jOiEGf2d69LhlJFdTYGSrdHMxWRJK7JNERNFg=
+github.com/6qhtsk/sonolusgo v0.7.5-rc.1/go.mod h1:Zo+hF0jOiEGf2d69LhlJFdTYGSrdHMxWRJK7JNERNFg=
 github.com/QcloudApi/qcloud_sign_golang v0.0.0-20141224014652-e4130a326409/go.mod h1:1pk82RBxDY/JZnPQrtqHlUFfCctgdorsd9M06fMynOM=
 github.com/bytedance/sonic v1.5.0/go.mod h1:ED5hyg4y6t3/9Ku1R6dU/4KyJ48DZ4jPhfY1O2AihPM=
 github.com/bytedance/sonic v1.9.2 h1:GDaNjuWSGu09guE9Oql0MSTNhNCLlWwO8y/xM5BzcbM=
@@ -93,6 +94,8 @@ github.com/mattn/go-sqlite3 v1.14.17 h1:mCRHCLDUBXgpKAqIKsaAaAsrAlbkeomtRFKXh2L6
 github.com/mattn/go-sqlite3 v1.14.17/go.mod h1:2eHXhiwb8IkHr+BDWZGa96P6+rkvnG63S2DGjv9HUNg=
 github.com/mattn/go-sqlite3 v1.14.18 h1:JL0eqdCOq6DJVNPSvArO/bIV9/P7fbGrV00LZHc+5aI=
 github.com/mattn/go-sqlite3 v1.14.18/go.mod h1:2eHXhiwb8IkHr+BDWZGa96P6+rkvnG63S2DGjv9HUNg=
+github.com/mattn/go-sqlite3 v1.14.19 h1:fhGleo2h1p8tVChob4I9HpmVFIAkKGpiukdrgQbWfGI=
+github.com/mattn/go-sqlite3 v1.14.19/go.mod h1:2eHXhiwb8IkHr+BDWZGa96P6+rkvnG63S2DGjv9HUNg=
 github.com/mitchellh/mapstructure v1.4.3 h1:OVowDSCllw/YjdLkam3/sm7wEtOy59d8ndGgCcyj8cs=
 github.com/mitchellh/mapstructure v1.4.3/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
 github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
