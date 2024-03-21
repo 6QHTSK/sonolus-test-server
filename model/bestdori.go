@@ -63,6 +63,45 @@ func (chart *BestdoriChart) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+func (chart BestdoriChart) MarshalJSON() ([]byte, error) {
+	// 创建一个包含结构体字段的映射
+	var fields []map[string]interface{}
+
+	for _, note := range chart {
+		// 获取结构体的 JSON 序列化结果
+		var mapNote map[string]interface{}
+		jsonData, err := json.Marshal(note)
+		if err != nil {
+			return nil, err
+		}
+
+		// 将原始 JSON 数据解码为一个 map
+		if err := json.Unmarshal(jsonData, &mapNote); err != nil {
+			return nil, err
+		}
+
+		// 添加type字段
+		var structType string
+		switch note.(type) {
+		case *BestdoriNote:
+			structType = "Single"
+		case *BestdoriDirectioalNote:
+			structType = "Directional"
+		case *BestdoriSlideNote:
+			structType = "Slide"
+		case *BestdoriLongNote:
+			structType = "Slide" // No Long Note in Fan-made Charts
+		case *BestdoriBpmObject:
+			structType = "BPM"
+		}
+		mapNote["type"] = structType
+
+		// 重新序列化为 JSON
+		fields = append(fields, mapNote)
+	}
+	return json.Marshal(fields)
+}
+
 type BestdoriObject interface {
 	getType() string
 	Convert(ctx context.Context) error
@@ -80,7 +119,7 @@ type BaseBestdoriNote struct {
 
 type BestdoriConnectionNote struct {
 	BaseBestdoriNote
-	Hidden bool `json:"hidden"`
+	Hidden bool `json:"hidden,omitempty"`
 }
 
 type BestdoriNote struct {
