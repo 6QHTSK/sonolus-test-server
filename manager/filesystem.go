@@ -1,4 +1,4 @@
-package service
+package manager
 
 import (
 	"bytes"
@@ -18,21 +18,21 @@ func initLocalRepo() {
 	}
 }
 
-func getDataPath(uid int) string {
+func GetDataPath(uid int) string {
 	return fmt.Sprintf("%s/%d.json.gz", localRepo, uid)
 }
 
-func getBgmPath(uid int) string {
+func GetBgmPath(uid int) string {
 	return fmt.Sprintf("%s/%d.mp3", localRepo, uid)
 }
 
-func getBDV2DataPath(uid int) string {
+func GetBDV2DataPath(uid int) string {
 	return fmt.Sprintf("%s/%d.bdv2.json", localRepo, uid)
 }
 
-func removeOutdatedPost(outdatedPostUid []int) error {
+func RemoveOutdatedPost(outdatedPostUid []int) error {
 	for _, uid := range outdatedPostUid {
-		for _, item := range []string{getDataPath(uid), getBgmPath(uid), getBDV2DataPath(uid)} {
+		for _, item := range []string{GetDataPath(uid), GetBgmPath(uid), GetBDV2DataPath(uid)} {
 			err := os.Remove(item)
 			if err != nil {
 				return err
@@ -42,7 +42,7 @@ func removeOutdatedPost(outdatedPostUid []int) error {
 	return nil
 }
 
-func checkIfAudio(bgmData []byte) error {
+func CheckIfAudio(bgmData []byte) error {
 	head := bgmData[0:261]
 	if !filetype.IsAudio(head) {
 		trueFileType, _ := filetype.Match(head)
@@ -64,7 +64,7 @@ func saveIOReaderToFile(file io.Reader, dest string) error {
 	return err
 }
 
-func saveBytesToFile(data []byte, dest string) (err error) {
+func SaveBytesToFile(data []byte, dest string) (err error) {
 	reader := bytes.NewReader(data)
 	return saveIOReaderToFile(reader, dest)
 }

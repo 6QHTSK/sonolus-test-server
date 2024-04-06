@@ -313,3 +313,4 @@ sonolus/
 config.ini
 /scripts/*.json
 sonolus-old/
+sonolus-0.7/

@@ -1,4 +1,4 @@
-package service
+package dao
 
 import (
 	"github.com/6qhtsk/sonolus-test-server/model"
@@ -48,22 +48,7 @@ func addUploadTimeColumn() {
 	}
 }
 
-func initDatabase() {
-	dbFile := "./sonolus/database.db"
-	err := initializeDatabase(dbFile)
-	if err != nil {
-		panic(err)
-	}
-
-	db, err = sqlx.Open("sqlite3", dbFile)
-	if err != nil {
-		panic(err)
-	}
-
-	addUploadTimeColumn()
-}
-
-func generatePostUid() int {
+func GeneratePostUid() int {
 	var id int
 	query := `
         WITH RECURSIVE cnt(x) AS (
@@ -84,7 +69,7 @@ func generatePostUid() int {
 	return id
 }
 
-func insertPost(uid int, post model.UploadPost, bgmHash string, dataHash string) error {
+func InsertPost(uid int, post model.UploadPost, bgmHash string, dataHash string) error {
 	current := time.Now().UTC().Unix()
 	expired := current + post.Lifetime
 	_, err := db.Exec(`INSERT INTO post(id,title,difficulty,hidden,expired,bgmHash,dataHash,upload) VALUES (?,?,?,?,?,?,?,?)`, uid, post.Title, post.Difficulty, post.Hidden, expired, bgmHash, dataHash, current)
@@ -94,7 +79,7 @@ func insertPost(uid int, post model.UploadPost, bgmHash string, dataHash string)
 	return err
 }
 
-func deleteDBOutdatedPost() (deleteUidList []int, err error) {
+func DeleteDBOutdatedPost() (deleteUidList []int, err error) {
 	current := time.Now().UTC().Unix()
 	err = db.Select(&deleteUidList, `SELECT id from post where expired < ?`, current)
 	if err != nil {

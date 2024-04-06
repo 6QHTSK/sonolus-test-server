@@ -15,7 +15,7 @@ type SonolusLevelDataEntityData struct {
 type SonolusLevelDataEntity struct {
 	Archetype string                       `json:"archetype"`
 	Data      []SonolusLevelDataEntityData `json:"data"`
-	Ref       string                       `json:"ref,omitempty"`
+	Name      string                       `json:"name,omitempty"`
 }
 
 type SonolusLevelData struct {

@@ -5,7 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/6qhtsk/sonolus-test-server/config"
+	"github.com/6qhtsk/sonolus-test-server/dao"
 	"github.com/6qhtsk/sonolus-test-server/errors"
+	"github.com/6qhtsk/sonolus-test-server/manager"
 	"github.com/6qhtsk/sonolus-test-server/model"
 	"io"
 	"log"
@@ -18,7 +20,7 @@ func SavePost(post model.UploadPost) (uid int, err error, myError *errors.TestSe
 	saveMutex.Lock()
 	defer saveMutex.Unlock()
 	deleteOutdatedPost()
-	uid = generatePostUid()
+	uid = dao.GeneratePostUid()
 
 	// 处理保存音频文件任务
 	// 音频文件大于20M时，返回错误
@@ -39,7 +41,7 @@ func SavePost(post model.UploadPost) (uid int, err error, myError *errors.TestSe
 	if err != nil {
 		return 0, err, errors.BGMProcessError
 	}
-	err = checkIfAudio(bgmBuffer.Bytes())
+	err = manager.CheckIfAudio(bgmBuffer.Bytes())
 	if err != nil {
 		return 0, err, errors.BadBGMType
 	}
@@ -65,52 +67,52 @@ func SavePost(post model.UploadPost) (uid int, err error, myError *errors.TestSe
 	datahash := bytesSha1(sonolusChartData)
 	// 保存文件
 	if config.ServerCfg.UseTencentCos { // 保存到腾讯云
-		err = uploadBytesToTencentCos(bgmBuffer.Bytes(), getCosBgmPath(uid))
+		err = manager.UploadBytesToTencentCos(bgmBuffer.Bytes(), manager.GetCosBgmPath(uid))
 		if err != nil {
 			return 0, err, errors.FailUploadToTencentCos
 		}
-		err = uploadBytesToTencentCos(sonolusChartData, getCosDataPath(uid))
+		err = manager.UploadBytesToTencentCos(sonolusChartData, manager.GetCosDataPath(uid))
 		if err != nil {
 			return 0, err, errors.FailUploadToTencentCos
 		}
-		err = uploadBytesToTencentCos(bestdoriV2ChartData, GetCosBDV2DataPath(uid))
+		err = manager.UploadBytesToTencentCos(bestdoriV2ChartData, manager.GetCosBDV2DataPath(uid))
 	} else { // 保存到本地系统
-		err = saveBytesToFile(bgmBuffer.Bytes(), getBgmPath(uid))
+		err = manager.SaveBytesToFile(bgmBuffer.Bytes(), manager.GetBgmPath(uid))
 		if err != nil {
 			return 0, err, errors.FailCreateFile
 		}
-		err = saveBytesToFile(sonolusChartData, getDataPath(uid))
+		err = manager.SaveBytesToFile(sonolusChartData, manager.GetDataPath(uid))
 		if err != nil {
 			return uid, err, errors.FailCreateFile
 		}
-		err = saveBytesToFile(bestdoriV2ChartData, getBDV2DataPath(uid))
+		err = manager.SaveBytesToFile(bestdoriV2ChartData, manager.GetBDV2DataPath(uid))
 		if err != nil {
 			return 0, err, errors.FailCreateFile
 		}
 	}
 	// 插入到数据库
-	if insertPost(uid, post, bgmHash, datahash) != nil {
+	if dao.InsertPost(uid, post, bgmHash, datahash) != nil {
 		return 0, err, errors.FailInsertDatabase
 	}
 	return uid, nil, nil
 }
 
 func deleteOutdatedPost() {
-	outdatedPost, err := deleteDBOutdatedPost()
+	outdatedPost, err := dao.DeleteDBOutdatedPost()
 	if err != nil {
 		log.Printf("删除谱面数据库条目时发生错误：%s", err)
 		return
 	}
 	if config.ServerCfg.UseTencentCos {
 		for _, uid := range outdatedPost {
-			err = deleteInTencentCos([]string{getCosDataPath(uid), getCosBgmPath(uid), GetCosBDV2DataPath(uid)})
+			err = manager.DeleteInTencentCos([]string{manager.GetCosDataPath(uid), manager.GetCosBgmPath(uid), manager.GetCosBDV2DataPath(uid)})
 			if err != nil {
 				log.Printf("删除谱面字段时发生错误：%s", err)
 				return
 			}
 		}
 	} else {
-		err = removeOutdatedPost(outdatedPost)
+		err = manager.RemoveOutdatedPost(outdatedPost)
 		if err != nil {
 			log.Printf("删除谱面字段时发生错误：%s", err)
 			return

@@ -1,6 +1,8 @@
-package service
+package manager
 
-import "github.com/6qhtsk/sonolus-test-server/config"
+import (
+	"github.com/6qhtsk/sonolus-test-server/config"
+)
 
 func init() {
 	if config.ServerCfg.UseTencentCos {
@@ -8,5 +10,4 @@ func init() {
 	} else {
 		initLocalRepo()
 	}
-	initDatabase()
 }

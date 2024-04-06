@@ -1,4 +1,4 @@
-package service
+package manager
 
 import (
 	"bytes"
@@ -29,11 +29,11 @@ func initTencentCos() {
 
 const cosPathPrefix = "sonolus/test"
 
-func getCosBgmPath(uid int) string {
+func GetCosBgmPath(uid int) string {
 	return fmt.Sprintf("%s/%d.mp3", cosPathPrefix, uid)
 }
 
-func getCosDataPath(uid int) string {
+func GetCosDataPath(uid int) string {
 	return fmt.Sprintf("%s/%d.json.gz", cosPathPrefix, uid)
 }
 
@@ -41,7 +41,7 @@ func GetCosBDV2DataPath(uid int) string {
 	return fmt.Sprintf("%s/%d.bdv2.json", cosPathPrefix, uid)
 }
 
-func uploadBytesToTencentCos(data []byte, filepath string) (err error) {
+func UploadBytesToTencentCos(data []byte, filepath string) (err error) {
 	reader := bytes.NewReader(data)
 	return uploadToTencentCos(reader, filepath)
 }
@@ -51,7 +51,7 @@ func uploadToTencentCos(file io.Reader, filepath string) (err error) {
 	return err
 }
 
-func deleteInTencentCos(filepaths []string) (err error) {
+func DeleteInTencentCos(filepaths []string) (err error) {
 	var obs []cos.Object
 	for _, v := range filepaths {
 		obs = append(obs, cos.Object{Key: v})

@@ -7,10 +7,15 @@ import (
 	"strconv"
 )
 
+// from sonolus-core
+// ref: https://github.com/Sonolus/sonolus-core/blob/master/src/common/core/engine/engine-archetype-data-name.ts
 const (
-	ARCHETYPE_BEAT      string = "#BEAT"
-	ARCHETYPE_BPMCHANGE string = "#BPM_CHANGE"
-	ARCHETYPE_BPM       string = "#BPM"
+	ARCHETYPE_BEAT      = "#BEAT"
+	ARCHETYPE_BPM       = "#BPM"
+	ARCHETYPE_BPMCHANGE = "#BPM_CHANGE"
+	ARCHTYPE_TIMESCALE  = "#TIMESCALE"
+	ARCHTYPE_JUDGMENT   = "#JUDGMENT"
+	ARCHTYPE_ACCURACY   = "#ACCURACY"
 )
 
 func (bdNote *BestdoriNote) Convert(ctx context.Context) error {
@@ -50,8 +55,10 @@ func (bdNote *BestdoriDirectioalNote) Convert(ctx context.Context) error {
 }
 
 func SlideLongConvertor(ctx context.Context, connections []BestdoriConnectionNote) error {
-	var start, head *Intermediate
+	var first, start, head *Intermediate
 	var connectors []*Intermediate
+	var appends []*Intermediate
+
 	connectorArchetype := "StraightSlideConnector"
 	for _, connection := range connections {
 		if connection.Hidden {
@@ -59,6 +66,7 @@ func SlideLongConvertor(ctx context.Context, connections []BestdoriConnectionNot
 			break
 		}
 	}
+
 	for i, connection := range connections {
 		if i == 0 { // Start
 			start = &Intermediate{
@@ -69,11 +77,9 @@ func SlideLongConvertor(ctx context.Context, connections []BestdoriConnectionNot
 				},
 				Sim: true,
 			}
+			first = start
 			head = start
-			err := appendIntermediate(ctx, start)
-			if err != nil {
-				return err
-			}
+			appends = append(appends, first)
 		} else if i == len(connections)-1 { // Tail
 			var archetype string
 			if connection.Flick {
@@ -86,24 +92,24 @@ func SlideLongConvertor(ctx context.Context, connections []BestdoriConnectionNot
 				Data: map[string]interface{}{
 					ARCHETYPE_BEAT: connection.Beat,
 					"lane":         connection.Lane - 3.0,
+					"first":        first,
 					"prev":         start,
 				},
 				Sim: true,
 			}
 			if connection.Flick {
-				if len(connections) == 2 && connections[0].Lane == connection.Lane {
+				if len(connections) == 2 && head.Data["lane"].(float64) == tail.Data["lane"].(float64) {
 					tail.Data["long"] = 1.0
 				} else {
 					tail.Data["long"] = 0.0
 				}
 			}
-			err := appendIntermediate(ctx, tail)
-			if err != nil {
-				return err
-			}
+			appends = append(appends, tail)
+			first.Data["last"] = tail
 			connectors = append(connectors, &Intermediate{
 				Archetype: connectorArchetype,
 				Data: map[string]interface{}{
+					"first": first,
 					"start": start,
 					"head":  head,
 					"tail":  tail,
@@ -112,10 +118,7 @@ func SlideLongConvertor(ctx context.Context, connections []BestdoriConnectionNot
 			})
 			for _, connector := range connectors {
 				connector.Data["end"] = tail
-				err := appendIntermediate(ctx, connector)
-				if err != nil {
-					return err
-				}
+				appends = append(appends, connector)
 			}
 			connectors = []*Intermediate{}
 		} else if connection.Hidden { // 隐藏音符
@@ -127,13 +130,11 @@ func SlideLongConvertor(ctx context.Context, connections []BestdoriConnectionNot
 				},
 				Sim: false,
 			}
-			err := appendIntermediate(ctx, tail)
-			if err != nil {
-				return err
-			}
+			appends = append(appends, tail)
 			connectors = append(connectors, &Intermediate{
 				Archetype: connectorArchetype,
 				Data: map[string]interface{}{
+					"first": first,
 					"start": start,
 					"head":  head,
 					"tail":  tail,
@@ -147,17 +148,16 @@ func SlideLongConvertor(ctx context.Context, connections []BestdoriConnectionNot
 				Data: map[string]interface{}{
 					ARCHETYPE_BEAT: connection.Beat,
 					"lane":         connection.Lane - 3.0,
+					"first":        first,
 					"prev":         start,
 				},
 				Sim: false,
 			}
-			err := appendIntermediate(ctx, tail)
-			if err != nil {
-				return err
-			}
+			appends = append(appends, tail)
 			connectors = append(connectors, &Intermediate{
 				Archetype: connectorArchetype,
 				Data: map[string]interface{}{
+					"first": first,
 					"start": start,
 					"head":  head,
 					"tail":  tail,
@@ -166,14 +166,17 @@ func SlideLongConvertor(ctx context.Context, connections []BestdoriConnectionNot
 			})
 			for _, connector := range connectors {
 				connector.Data["end"] = tail
-				err := appendIntermediate(ctx, connector)
-				if err != nil {
-					return err
-				}
+				appends = append(appends, connector)
 			}
 			connectors = []*Intermediate{}
 			start = tail
 			head = tail
+		}
+	}
+	for _, intermediate := range appends {
+		err := appendIntermediate(ctx, intermediate)
+		if err != nil {
+			return err
 		}
 	}
 	return nil
@@ -215,7 +218,7 @@ func getRef(ctx context.Context, intermediate *Intermediate) (ref string) {
 		ctxValues.IntermediateToRef[intermediate] = ref
 		entity, ok := ctxValues.IntermediateToEntity[intermediate]
 		if ok {
-			entity.Ref = ref
+			entity.Name = ref
 			ctxValues.IntermediateToEntity[intermediate] = entity
 		}
 	}
@@ -245,7 +248,7 @@ func appendIntermediate(ctx context.Context, intermediate *Intermediate) error {
 
 	ref, ok := ctxValues.IntermediateToRef[intermediate]
 	if ok {
-		entity.Ref = ref
+		entity.Name = ref
 	}
 
 	ctxValues.IntermediateToEntity[intermediate] = &entity
@@ -343,14 +346,6 @@ func (bdChart *BestdoriChart) ConvertToSonnolus() (levelData SonolusLevelData, e
 	ctx := context.WithValue(context.Background(), "values", &ctxValues)
 	err = appendIntermediate(ctx, &Intermediate{
 		Archetype: "Initialization",
-		Data:      map[string]interface{}{},
-		Sim:       false,
-	})
-	if err != nil {
-		return levelData, err
-	}
-	err = appendIntermediate(ctx, &Intermediate{
-		Archetype: "InputManager",
 		Data:      map[string]interface{}{},
 		Sim:       false,
 	})

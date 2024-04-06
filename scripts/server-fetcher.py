@@ -7,7 +7,7 @@ import threading
 import time
 import requests
 
-target_server = "https://servers.sonolus.com/bestdori/"
+target_server = "https://sonolus.bestdori.com/community/"
 localization = "zhs"
 requests.packages.urllib3.disable_warnings()
 

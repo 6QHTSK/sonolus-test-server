@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/6qhtsk/sonolus-test-server/config"
 	"github.com/6qhtsk/sonolus-test-server/errors"
-	"github.com/6qhtsk/sonolus-test-server/service"
+	"github.com/6qhtsk/sonolus-test-server/manager"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -28,7 +28,7 @@ func RedirectBDV2Chart() gin.HandlerFunc {
 		if abortWhenErr(ctx, err, errors.BadUidErr) {
 			return
 		}
-		remoteUrl := fmt.Sprintf("%s/%s", config.ServerCfg.Cos.AccessUrl, service.GetCosBDV2DataPath(id))
+		remoteUrl := fmt.Sprintf("%s/%s", config.ServerCfg.Cos.AccessUrl, manager.GetCosBDV2DataPath(id))
 		ctx.Redirect(http.StatusMovedPermanently, remoteUrl)
 	}
 }
