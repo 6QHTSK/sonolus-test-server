@@ -34,6 +34,7 @@ func main() {
 	}
 	router := gin.Default()
 	router.Use(cors.Default())
+	router.Use(controller.RequestSizeLimiter(30 * 1024 * 1024)) // limits all the uploads with in 30MB
 	sonolusConfig.LoadHandlers(router)
 	if !config.ServerCfg.UseTencentCos {
 		sonolusConfig.RouterGroups.Levels.GET("/:name/bgm", controller.GetLevelItems("bgm"))

@@ -21,6 +21,9 @@ func ChartUploadHandler() gin.HandlerFunc {
 		if uploadChart.Lifetime <= 0 {
 			uploadChart.Lifetime = 21600
 		}
+		if len(uploadChart.Title) > 256 {
+			uploadChart.Title = uploadChart.Title[:256] // Trim the title < 256 bytes
+		}
 		err = uploadChart.ParseChart()
 		if abortWhenErr(ctx, err, errors.UploadChartErr) {
 			return
