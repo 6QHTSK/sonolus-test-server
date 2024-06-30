@@ -99,7 +99,7 @@ func LevelItemHandler(name string) (item sonolusgo.Level, description string, er
 		return item, description, errors.BadUidErr
 	}
 	item = convertDatabaseToSonolus(post[0])
-	return item, "", nil
+	return item, "测试谱面", nil
 }
 
 func convertDatabaseToSonolus(dbItem model.DatabasePost) sonolusgo.Level {
