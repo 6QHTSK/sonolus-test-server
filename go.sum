@@ -2,6 +2,7 @@ filippo.io/edwards25519 v1.1.0 h1:FNf4tywRC1HmFuKW5xopWpigGjJKiJSV0Cqo0cJWDaA=
 filippo.io/edwards25519 v1.1.0/go.mod h1:BxyFTGdWcka3PhytdK4V28tE5sGfRvvvRV7EaN4VDT4=
 github.com/6qhtsk/sonolusgo v0.8.4-2 h1:vlp3275Vk1vYoBcI7kgQcYPgDFtCJWZ305Nc5tu19pk=
 github.com/6qhtsk/sonolusgo v0.8.4-2/go.mod h1:oSrcCxlSz26g4ZBnvqbu5UJizit1Bcn/dFSo5PLRc9I=
+github.com/6qhtsk/sonolusgo v0.8.4-3/go.mod h1:oSrcCxlSz26g4ZBnvqbu5UJizit1Bcn/dFSo5PLRc9I=
 github.com/QcloudApi/qcloud_sign_golang v0.0.0-20141224014652-e4130a326409/go.mod h1:1pk82RBxDY/JZnPQrtqHlUFfCctgdorsd9M06fMynOM=
 github.com/bytedance/sonic v1.11.6 h1:oUp34TzMlL+OY1OUWxHqsdkgC/Zfc85zGqw9siXjrc0=
 github.com/bytedance/sonic v1.11.6/go.mod h1:LysEHSvpvDySVdC2f87zGWf6CIKJcAvqab1ZaiQtds4=

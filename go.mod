@@ -3,7 +3,7 @@ module github.com/6qhtsk/sonolus-test-server
 go 1.20
 
 require (
-	github.com/6qhtsk/sonolusgo v0.8.4-2
+	github.com/6qhtsk/sonolusgo v0.8.4-3
 	github.com/gin-contrib/cors v1.7.2
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-ini/ini v1.67.0
