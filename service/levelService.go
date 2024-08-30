@@ -43,8 +43,9 @@ func getNoticeLevel() sonolusgo.Level {
 }
 
 var LevelHandlers = sonolusgo.SonolusService[sonolusgo.Level]{
-	List:      LevelListHandler,
-	Search:    LevelSearchHandler,
+	List: LevelListHandler,
+	// Search: LevelSearchHandler,	// TODO Still need testing
+	Search:    sonolusgo.GetEmptySearch,
 	Item:      LevelItemHandler,
 	Recommend: sonolusgo.GetEmptyRecommend[sonolusgo.Level],
 }
@@ -52,7 +53,8 @@ var LevelHandlers = sonolusgo.SonolusService[sonolusgo.Level]{
 func LevelListHandler(page int, queryMap map[string]string) (pageCount int, items []sonolusgo.Level) {
 	name, ok := queryMap["keywords"]
 	var uid int
-	if name == "" || !ok { // 未指定uid
+	items = []sonolusgo.Level{} // default
+	if name == "" || !ok {      // 未指定uid
 		uid = -1
 	} else {
 		var err error
@@ -80,9 +82,18 @@ func LevelListHandler(page int, queryMap map[string]string) (pageCount int, item
 	return pageCount, items
 }
 
-func LevelSearchHandler() (search sonolusgo.ServerOptionSection) {
-	search.Options = append(search.Options, sonolusgo.NewSearchTextOption("uid", "UID - 可搜索隐藏谱面", "隐藏谱面ID"))
-	return search
+func LevelSearchHandler() (searches []sonolusgo.ServerForm) {
+	search := sonolusgo.ServerForm{
+		Type:                "ID",
+		Title:               "谱面ID直接搜索",
+		Icon:                "",
+		Description:         "",
+		Help:                "",
+		RequireConfirmation: false,
+		Options:             []sonolusgo.ServerOption{sonolusgo.NewServerTextOption("uid", "UID - 可搜索隐藏谱面", "", true, "", "隐藏谱面ID", 4, []string{})},
+	}
+	searches = append(searches, search)
+	return searches
 }
 
 func LevelItemHandler(name string) (item sonolusgo.Level, description string, err error) {
