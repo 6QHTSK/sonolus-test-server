@@ -98,7 +98,10 @@ func LevelSearchHandler() (searches []sonolusgo.ServerForm) {
 
 func LevelItemHandler(name string) (item sonolusgo.Level, description string, err error) {
 	if name == "置顶公告#" {
-		return getNoticeLevel(), "公告不可游玩(´・ω・`)\n可在Sonolus CN QQ频道找到我\nGithub项目：https://github.com/6QHTSK/sonolus-test-server\nB站：@彩绫与6QHTSK 关私信提醒了你的消息可能很久才会被我看到", nil
+		if Is2025AprilFool() {
+			return getNoticeLevel(), "愚人节快乐！(´・ω・`)\n可在B站或者部分谱师交流群找到我\nGithub项目：https://github.com/6QHTSK/sonolus-test-server\nB站：@彩绫与6QHTSK 关私信提醒了你的消息可能很久才会被我看到", nil
+		}
+		return getNoticeLevel(), "公告不可游玩(´・ω・`)\n可在B站或者部分谱师交流群找到我\nGithub项目：https://github.com/6QHTSK/sonolus-test-server\nB站：@彩绫与6QHTSK 关私信提醒了你的消息可能很久才会被我看到", nil
 	}
 	uid, err := strconv.Atoi(name)
 	if err != nil {
@@ -120,7 +123,7 @@ func convertDatabaseToSonolus(dbItem model.DatabasePost) sonolusgo.Level {
 		panic(err)
 	}
 	r := rand.New(rand.NewSource(int64(dbItem.Id)))
-	randCoverID := r.Intn(35) + 1
+	randCoverID := r.Intn(40) + 1
 	var BGMItem, DataItem sonolusgo.SRL
 	if config.ServerCfg.UseTencentCos {
 		BGMItem = sonolusgo.SRL{

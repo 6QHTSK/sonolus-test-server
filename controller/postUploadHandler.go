@@ -16,7 +16,10 @@ func ChartUploadHandler() gin.HandlerFunc {
 			return
 		}
 		if uploadChart.Difficulty <= 0 {
-			uploadChart.Difficulty = 25
+			uploadChart.Difficulty = 20
+			if service.Is2025AprilFool() {
+				uploadChart.Difficulty = -41
+			}
 		}
 		if uploadChart.Lifetime <= 0 {
 			uploadChart.Lifetime = 21600

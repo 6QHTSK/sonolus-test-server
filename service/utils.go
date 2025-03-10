@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"time"
 )
 
 func gzippedBytes(data []byte) (gzipped []byte, err error) {
@@ -46,4 +47,9 @@ func ioReaderSha1(reader io.Reader) string {
 	}
 
 	return fmt.Sprintf("%x", hash.Sum(nil))
+}
+
+func Is2025AprilFool() bool {
+	currentTime := time.Now().Unix()
+	return currentTime >= 1743436800 && currentTime < 1743523200
 }

@@ -22,8 +22,13 @@ headers = {'User-Agent': "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/201001
 
 
 def get_json(url, params=None):
-    for i in range(3):
-        resp = requests.get(url, params=params, headers=headers, verify=False)
+    for i in range(10):
+        try:
+            resp = requests.get(url, params=params, headers=headers, verify=False)
+        except:
+            print("Error!")
+            time.sleep(5)
+            continue
         if resp.status_code == 200 and len(resp.content) != 0:
             return resp.json()
     raise "Status Code Not 200 for 3 times"
@@ -60,7 +65,12 @@ def download_file(remote_path):
     if not os.path.exists(local_path) or os.path.getsize(local_path) == 0:
         while True:
             print("Start downloading %s" % remote_url)
-            f = requests.get(remote_url, headers=headers, verify=False)
+            try:
+                f = requests.get(remote_url, headers=headers, verify=False)
+            except:
+                print("Download %s Failed Exceptional, Sleep For 10+ Sec")
+                time.sleep(random.random()*10 + 10)
+                continue
             if len(f.content) == 0 or f.status_code != 200:
                 print("Download %s Failed({}), Sleep For 10+ Sec".format(f.status_code))
                 time.sleep(random.random()*10 + 10)
@@ -74,9 +84,9 @@ def download_file(remote_path):
         print("Already Downloaded %s" % remote_url)
 
 
-def traverse_section(section_name, download_srl_list):
-    i = 0
-    page = 1
+def traverse_section(section_name, download_srl_list,offset=0):
+    i = offset
+    page = offset+1
     items = []
     while i < page:
         if i == 0:
@@ -100,21 +110,22 @@ def traverse_section(section_name, download_srl_list):
     with open(os.path.join(os.getcwd(), "../sonolus/%s.local.json" % section_name), "w", encoding="utf8") as list_json_file:
         json.dump(items, list_json_file, ensure_ascii=False)
 
+if __name__ == "__main__":
 
-for i in range(thread_cnt):
-    thread = DownloadThread(workQueue)
-    thread.start()
-    threads.append(thread)
+    for i in range(thread_cnt):
+        thread = DownloadThread(workQueue)
+        thread.start()
+        threads.append(thread)
 
-traverse_section("skins", ["data", "texture", "thumbnail"])
-traverse_section("backgrounds", ["configuration", "data", "image", "thumbnail"])
-traverse_section("effects", ["audio", "data", "thumbnail"])
-traverse_section("particles", ["data", "texture", "thumbnail"])
-traverse_section("engines", ["playData", "watchData", "tutorialData", "previewData", "thumbnail", "configuration"])
+    # traverse_section("skins", ["data", "texture", "thumbnail"])
+    # traverse_section("backgrounds", ["configuration", "data", "image", "thumbnail"])
+    # traverse_section("effects", ["audio", "data", "thumbnail"])
+    # traverse_section("particles", ["data", "texture", "thumbnail"])
+    # traverse_section("engines", ["playData", "watchData", "tutorialData", "previewData", "thumbnail", "configuration"])
 
-exit_flag = True
+    exit_flag = True
 
-for t in threads:
-    t.join()
+    for t in threads:
+        t.join()
 
-print("Finish fetching server %s" % target_server)
+    print("Finish fetching server %s" % target_server)
